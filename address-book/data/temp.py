@@ -1,9 +1,14 @@
 import pandas as pd
+import os
 
-temp_data = pd.read_csv('C:/Users/vandevnj/Documents/Personal/Projecten/Public-projects/address-book/data/georef-belgium-postal-codes.csv', sep = ';')
+absolute_path = os.path.dirname(__file__)
+inc_data = 'georef-belgium-postal-codes.csv'
+out_data = 'temp.csv'
+
+temp_data = pd.read_csv(os.path.join(absolute_path, inc_data), sep = ';')
 
 
 #do stuff
 # Maybe try to access it directly from source? 
 
-temp_data.to_csv('data/temp.csv', sep = ';', header = True)
+temp_data.to_csv(os.path.join(absolute_path, out_data), sep = ';', header = True)

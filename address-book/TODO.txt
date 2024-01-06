@@ -1,0 +1,9 @@
+
+TO DO list: 
+
+- Basic UI with tkinter
+    > Buttons to delete and add
+    > Popup with things to fill in 
+
+- Automate data collection and cleaning
+- Abstract logic for CRUD 

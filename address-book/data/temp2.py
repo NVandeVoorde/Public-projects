@@ -42,6 +42,8 @@ res = connection.execute(qry).fetchall()
 for row in res: 
     print(row)
 
+# EVEN LATEN STAAN ZODAT WE DATA HEBBEN
+quit()
 
 # DELETE 
 print("Delete")

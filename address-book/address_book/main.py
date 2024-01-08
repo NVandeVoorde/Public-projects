@@ -1,4 +1,8 @@
 import tkinter as tk 
+from tkinter import ttk
+from functions import get_all_data
+
+import tkinter as tk 
 
 root = tk.Tk()
 root.geometry("800x800")
@@ -40,9 +44,30 @@ btn_delete.grid(row = 0, column = 1)
 
 frm_buttons.pack(fill= 'x')
 
+
 # TABLE
+frm_table = tk.Frame(root)
 
+df = get_all_data()
 
+#columns = ('id', 'first_name', 'last_name', 'street', 'house_number', 'zipcode')
+
+tree = ttk.Treeview(root)
+
+tree['columns'] = df.columns.values.tolist()
+
+for i in df.columns.values.tolist():
+    tree.column(i, width=50)
+    tree.heading(i, text=i)
+for index, row in df.iterrows():
+    tree.insert("", 'end', text=index, values=list(row))
+
+tree.pack()
+frm_table.pack()
 
 # END 
 root.mainloop()
+
+quit()
+df = get_all_data()
+print(df)

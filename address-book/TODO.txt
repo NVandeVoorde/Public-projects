@@ -2,8 +2,8 @@
 TO DO list: 
 
 - Basic UI with tkinter
-    > Buttons to delete and add
-    > Popup with things to fill in 
+    > Use data collected from entry to write to database
+    > Delete based on ID (dont do update, too much work)
 
 - Automate data collection and cleaning
 - Abstract logic for CRUD 

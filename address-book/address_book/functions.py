@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine, MetaData, select
 import pandas as pd
+import tkinter as tk
 import os
 from constants import DATABASE_URL
 
@@ -13,10 +14,11 @@ def get_all_data():
     address = metadata.tables['address']
 
     qry = select(address)
-    
+
     df = pd.read_sql_query(
         sql = qry, 
         con = engine
     )
 
     return df
+

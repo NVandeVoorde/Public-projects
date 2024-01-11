@@ -177,6 +177,7 @@ tree = ttk.Treeview(frm_table)
 
 def refresh_table(): 
     df = get_all_data()
+    tree.delete(*tree.get_children())
     tree['columns'] = df.columns.values.tolist()
     for i in df.columns.values.tolist():
         tree.column(i, width=50)

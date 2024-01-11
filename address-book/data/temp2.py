@@ -17,6 +17,7 @@ address = metadata.tables['address']
 
 
 # SELECT 
+#qry = zipcode.select()
 qry = zipcode.select()
 
 res = connection.execute(qry).fetchall()
@@ -24,33 +25,33 @@ print(res[0])
 
 
 # INSERT
-print("Insert")
-with engine.connect() as conn:
-    result = conn.execute(
-        insert(address),
-            [
-                {"id": "1", "first_name": "Frans","last_name": "Bauer", "street": "Rue des boucher", "house_number": "35", "zipcode": "1000"},
-                {"id": "2", "first_name": "Gert", "last_name": "Verhulst", "street": "Den boët", "house_number": "1", "zipcode": "2000"}
-            ],
-        )
-    conn.commit()
+# print("Insert")
+# with engine.connect() as conn:
+#     result = conn.execute(
+#         insert(address),
+#             [
+#                 {"id": "1", "first_name": "Frans","last_name": "Bauer", "street": "Rue des boucher", "house_number": "35", "zipcode": "1000"},
+#                 {"id": "2", "first_name": "Gert", "last_name": "Verhulst", "street": "Den boët", "house_number": "1", "zipcode": "2000"}
+#             ],
+#         )
+#     conn.commit()
 
-print("select")
-qry = address.select()
+# print("select")
+# qry = address.select()
 
-res = connection.execute(qry).fetchall()
-for row in res: 
-    print(row)
+# res = connection.execute(qry).fetchall()
+# for row in res: 
+#     print(row)
 
 # EVEN LATEN STAAN ZODAT WE DATA HEBBEN
-quit()
+#quit()
 
 # DELETE 
 print("Delete")
 with engine.connect() as conn: 
     result = conn.execute(
         delete(address).where(
-            or_(address.columns.first_name =='Gert', address.columns.first_name =='Frans')
+            or_(address.columns.first_name !='bla', address.columns.first_name =='blabla')
         )
     )
     conn.commit()

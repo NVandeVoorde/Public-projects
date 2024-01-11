@@ -1,6 +1,7 @@
 import tkinter as tk 
 from tkinter import ttk
-from functions import get_all_data
+from functions import get_all_data, insert_data
+from random import randint
 
 import tkinter as tk 
 
@@ -29,10 +30,12 @@ frm_buttons.columnconfigure(2, weight = 1)
 
 def open_window(): 
 
-    print("Open window")
-
     # Global names to return 
     global ent_firstname
+    global ent_lastname
+    global ent_housenumber
+    global ent_street
+    global ent_zipcode
 
     win_add = tk.Toplevel(root)
     win_add.geometry("300x350")
@@ -65,17 +68,28 @@ def open_window():
     ent_zipcode = tk.Entry(win_add)
     ent_zipcode.pack(anchor = 'w', padx = 5, pady = (2, 10))
     # submit button 
-    btn_submit = tk.Button(win_add, text = "Submit", command = entry_to_dict)
+    btn_submit = tk.Button(win_add, text = "Submit", command = lambda: [insert_dict(), win_add.destroy(), refresh_table()] )
     btn_submit.pack(anchor = 'w', padx = 5)
 
 
 
 def entry_to_dict(): 
-    ent_data_firstname = ent_firstname.get()
-    print(ent_data_firstname)
+    dict_entry = {}
+    print("Before dict gets filled")
+    print(dict_entry)
+    random_int = randint(0, 100000) #maak betere id
+    dict_entry.update( {'id': random_int} )
+    dict_entry.update( {'first_name': ent_firstname.get()} )
+    dict_entry.update( {'last_name': ent_lastname.get()} )
+    dict_entry.update( {'street': ent_street.get()} )
+    dict_entry.update( {'housenumber': ent_housenumber.get()} )
+    dict_entry.update( {'zipcode': ent_zipcode.get()} )
+    print(dict_entry)
+    return dict_entry
 
-
-
+def insert_dict(): 
+    dict = entry_to_dict()
+    insert_data(dict)
 
 
 btn_add = tk.Button(

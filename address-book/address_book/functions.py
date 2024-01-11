@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, MetaData, select
+from sqlalchemy import create_engine, MetaData, select, insert
 import pandas as pd
 import tkinter as tk
 import os
@@ -24,4 +24,15 @@ def get_all_data():
     return df
 
 
+def insert_data(dict): 
 
+    engine = create_engine( f"sqlite:///{DATABASE_URL}")
+    connection = engine.connect()
+    metadata = MetaData()
+
+    metadata.reflect(bind=engine)
+    address = metadata.tables['address']
+
+    qry = insert(address)
+    connection.execute(qry, dict)
+    connection.commit()

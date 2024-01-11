@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from functions import get_all_data, insert_data
 from random import randint
-
+from sqlalchemy import MetaData, create_engine, insert
+from constants import DATABASE_URL
 import tkinter as tk 
 
 root = tk.Tk()
@@ -68,12 +69,33 @@ def open_window():
     ent_zipcode = tk.Entry(win_add)
     ent_zipcode.pack(anchor = 'w', padx = 5, pady = (2, 10))
     # submit button 
-    btn_submit = tk.Button(win_add, text = "Submit", command = lambda: [insert_dict(), win_add.destroy(), refresh_table()] )
+    btn_submit = tk.Button(win_add, text = "Submit", command = lambda: [insert_dict(), refresh_table(), win_add.destroy()] ) #, refresh_table()
     btn_submit.pack(anchor = 'w', padx = 5)
 
 
 
-def entry_to_dict(): 
+# def entry_to_dict(): 
+#     dict_entry = {}
+#     print("Before dict gets filled")
+#     print(dict_entry)
+#     random_int = randint(0, 100000) #maak betere id
+#     dict_entry.update( {'id': random_int} )
+#     dict_entry.update( {'first_name': ent_firstname.get()} )
+#     dict_entry.update( {'last_name': ent_lastname.get()} )
+#     dict_entry.update( {'street': ent_street.get()} )
+#     dict_entry.update( {'housenumber': ent_housenumber.get()} )
+#     dict_entry.update( {'zipcode': ent_zipcode.get()} )
+
+#     ent_firstname.delete(0, tk.END)
+#     ent_lastname.delete(0, tk.END)
+#     ent_street.delete(0, tk.END)
+#     ent_housenumber.delete(0, tk.END)
+#     ent_zipcode.delete(0, tk.END)
+
+#     return dict_entry
+
+def insert_dict(): 
+
     dict_entry = {}
     print("Before dict gets filled")
     print(dict_entry)
@@ -84,12 +106,26 @@ def entry_to_dict():
     dict_entry.update( {'street': ent_street.get()} )
     dict_entry.update( {'housenumber': ent_housenumber.get()} )
     dict_entry.update( {'zipcode': ent_zipcode.get()} )
-    print(dict_entry)
-    return dict_entry
 
-def insert_dict(): 
-    dict = entry_to_dict()
-    insert_data(dict)
+    ent_firstname.delete(0, tk.END)
+    ent_lastname.delete(0, tk.END)
+    ent_street.delete(0, tk.END)
+    ent_housenumber.delete(0, tk.END)
+    ent_zipcode.delete(0, tk.END)
+    
+    #insert_data(dict_entry)
+    #dict_entry.clear()
+
+    engine = create_engine( f"sqlite:///{DATABASE_URL}")
+
+    connection = engine.connect()
+    metadata = MetaData()
+    metadata.reflect(bind=engine)
+    address = metadata.tables['address']
+
+    connection.execute(address.insert(), [dict_entry])
+    connection.commit()
+    connection.close()
 
 
 btn_add = tk.Button(

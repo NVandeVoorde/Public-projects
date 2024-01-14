@@ -1,10 +1,10 @@
 import tkinter as tk 
 from tkinter import ttk
-from functions import get_all_data, insert_data
 from random import randint
 from sqlalchemy import MetaData, create_engine, insert, delete
+
 from constants import DATABASE_URL
-import tkinter as tk 
+from functions import *
 
 root = tk.Tk()
 root.geometry("800x800")
@@ -13,10 +13,15 @@ root.title("Address book app")
 # INTRO
 frm_intro = tk.Frame(root)
 
-lbl_intro = tk.Label(frm_intro, text="CRUD Application for address book")
-lbl_intro.pack()
+tk.Label(frm_intro, 
+         text="CRUD Application for address book", 
+         font=("Arial", 15)).pack(anchor='w', pady = (10, 5))
 
-frm_intro.pack()
+tk.Label(frm_intro, 
+         text="Use the buttons to add, delete or change records in the database", 
+         font=("Arial", 11)).pack()
+
+frm_intro.pack(anchor='w', padx = (15, 0), pady = (5, 5) )
 
 # BUTTONS
 frm_buttons = tk.Frame(
@@ -25,9 +30,9 @@ frm_buttons = tk.Frame(
     padx = 15, 
     pady = 5
     )
-frm_buttons.columnconfigure(0, weight = 1)
-frm_buttons.columnconfigure(1, weight = 1)
-frm_buttons.columnconfigure(2, weight = 1)
+frm_buttons.columnconfigure(0, weight = 0)
+frm_buttons.columnconfigure(1, weight = 0)
+frm_buttons.columnconfigure(2, weight = 0)
 
 def open_window_update(dict): 
 
@@ -81,24 +86,6 @@ def open_window_update(dict):
                                                                             refresh_table(), 
                                                                             win_update.destroy()])
     btn_submit.pack(anchor = 'w', padx = 5)
-
-def selected_row(): 
-    global selected_id
-
-    selected = tree.focus()
-    details = tree.item(selected)
-    values = details.get("values")
-    print(details)
-    print(values)
-    columns = list(tree['columns'])
-    print(columns)
-    id = details.get('text')
-    selected_id = id
-
-    dict_selected = dict(zip(columns, values))
-    dict_selected.update({'id' : id})
-    print(dict_selected)
-    return dict_selected
 
 def open_window_add(): 
 
@@ -218,9 +205,7 @@ btn_add = tk.Button(
     frm_buttons, 
     text = "Add entry", 
     width = 10,
-    height = 2,
-    bg = 'black',
-    fg = 'white',
+    height = 1,
     padx = 5, 
     pady = 5, 
     command = open_window_add
@@ -230,9 +215,7 @@ btn_delete = tk.Button(
     frm_buttons, 
     text = "Delete entry", 
     width = 10,
-    height = 2,
-    bg = 'black',
-    fg = 'white',
+    height = 1,
     padx = 5, 
     pady = 5,
     command = lambda: [delete_entry(), refresh_table()]
@@ -242,17 +225,15 @@ btn_update = tk.Button(
     frm_buttons, 
     text = "Update entry", 
     width = 10,
-    height = 2,
-    bg = 'black',
-    fg = 'white',
+    height = 1,
     padx = 5, 
     pady = 5, 
-    command = lambda: [open_window_update(selected_row())]
+    command = lambda: [open_window_update(selected_row(tree))]
 )
 
-btn_add.grid(row = 0, column = 0, sticky = 'w')
-btn_delete.grid(row = 0, column = 1, sticky = 'w')
-btn_update.grid(row = 0, column = 2, sticky = 'w')
+btn_add.grid(row = 0, column = 0, sticky = 'w', padx=(0,5))
+btn_delete.grid(row = 0, column = 1, sticky = 'w', padx=(0,5))
+btn_update.grid(row = 0, column = 2, sticky = 'w', padx=(0,5))
 
 frm_buttons.pack(fill= 'x', pady = 15)
 
@@ -273,8 +254,8 @@ def refresh_table():
 
 refresh_table()
 
-tree.pack(fill = 'both', padx = 10)
-frm_table.pack(pady = 15, fill = 'both')
+tree.pack(fill = 'both', padx = 15)
+frm_table.pack(pady = 10, fill = 'both')
 
 # END 
 root.mainloop()

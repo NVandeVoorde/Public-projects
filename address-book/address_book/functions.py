@@ -43,3 +43,21 @@ def insert_data(dict):
     ])
     connection.commit()
     connection.close()
+
+def selected_row(table): 
+    global selected_id
+
+    selected = table.focus()
+    details = table.item(selected)
+    values = details.get("values")
+    print(details)
+    print(values)
+    columns = list(table['columns'])
+    print(columns)
+    id = details.get('text')
+    selected_id = id
+
+    dict_selected = dict(zip(columns, values))
+    dict_selected.update({'id' : id})
+    print(dict_selected)
+    return dict_selected

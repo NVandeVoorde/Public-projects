@@ -1,9 +1,5 @@
 import tkinter as tk 
 from tkinter import ttk
-from random import randint
-from sqlalchemy import MetaData, create_engine, insert, delete
-
-from constants import DATABASE_URL
 from functions import *
 
 root = tk.Tk()
@@ -82,9 +78,11 @@ def open_window_update(dict):
     ent_zipcode.insert(0, dict['zipcode'])
     ent_zipcode.pack(anchor = 'w', padx = 5, pady = (2, 10))
     # submit button 
-    btn_submit = tk.Button(win_update, text = "Submit", command = lambda: [update_entry(entry_to_dict(new_id=False)), 
-                                                                            refresh_table(), 
-                                                                            win_update.destroy()])
+    btn_submit = tk.Button(win_update, 
+                           text = "Submit", 
+                           command = lambda: [  update_entry(entry_to_dict(new_id=False), selected_id), 
+                                                refresh_table(tree), 
+                                                win_update.destroy()])
     btn_submit.pack(anchor = 'w', padx = 5)
 
 def open_window_add(): 
@@ -128,12 +126,22 @@ def open_window_add():
     ent_zipcode.pack(anchor = 'w', padx = 5, pady = (2, 10))
     # submit button 
     btn_submit = tk.Button(win_add, text = "Submit", command = lambda: [insert_dict(entry_to_dict()),
-                                                                        refresh_table(), 
+                                                                        refresh_table(tree), 
                                                                         win_add.destroy()])
     btn_submit.pack(anchor = 'w', padx = 5)
 
     
 def entry_to_dict(new_id = True): 
+    """ Creates empty dict and fills it with data from window
+    > I fail reacht the entries in the functions module
+    """
+
+    global ent_firstname
+    global ent_lastname
+    global ent_housenumber
+    global ent_street
+    global ent_zipcode
+
     dict_entry = {}
     if new_id == True: 
         random_int = randint(0, 100000) #maak betere id
@@ -149,57 +157,6 @@ def entry_to_dict(new_id = True):
 
     return dict_entry
 
-
-def empty_entries(list):
-    for item in list: 
-        item.delete(0, tk.END)
-
-
-def insert_dict(dict): 
-    
-    engine = create_engine( f"sqlite:///{DATABASE_URL}")
-    connection = engine.connect()
-    metadata = MetaData()
-    metadata.reflect(bind=engine)
-    address = metadata.tables['address']
-
-    connection.execute(address.insert(), [dict])
-    connection.commit()
-    connection.close()
-
-def delete_entry(): 
-
-    # Retrieve ID from table 
-    selected = tree.focus()
-    details = tree.item(selected)
-    id = details.get("text")
-
-    # Delete ID from database
-    engine = create_engine( f"sqlite:///{DATABASE_URL}")
-    connection = engine.connect()
-    metadata = MetaData()
-    metadata.reflect(bind=engine)
-    address = metadata.tables['address']
-    qry = address.delete().where(address.c.id == id)
-    connection.execute(qry)
-    connection.commit()
-    connection.close()
-
-def update_entry(dict): 
-    
-    # Retrieve data from entry widget via entry_to_dict
-    id = selected_id
-
-    # Delete ID from database
-    engine = create_engine( f"sqlite:///{DATABASE_URL}")
-    connection = engine.connect()
-    metadata = MetaData()
-    metadata.reflect(bind=engine)
-    address = metadata.tables['address']
-    qry = address.update().where(address.c.id == id).values(dict)
-    connection.execute(qry)
-    connection.commit()
-    connection.close()
 
 btn_add = tk.Button(
     frm_buttons, 
@@ -218,7 +175,7 @@ btn_delete = tk.Button(
     height = 1,
     padx = 5, 
     pady = 5,
-    command = lambda: [delete_entry(), refresh_table()]
+    command = lambda: [delete_entry(tree), refresh_table(tree)]
 )
 
 btn_update = tk.Button(
@@ -242,18 +199,13 @@ frm_buttons.pack(fill= 'x', pady = 15)
 frm_table = tk.Frame(root)
 tree = ttk.Treeview(frm_table,  selectmode='browse')
 
-def refresh_table(): 
-    tree.delete(*tree.get_children())
-    df = get_all_data()
-    tree['columns'] = df.columns.values.tolist()
-    for i in df.columns.values.tolist():
-        tree.column(i, width=50)
-        tree.heading(i, text=i)
-    for index, row in df.iterrows():
-        tree.insert("", 'end', text=index, values=list(row))
+refresh_table(tree)
 
+<<<<<<< HEAD
 refresh_table()
 
+=======
+>>>>>>> refs/remotes/origin/main
 tree.pack(fill = 'both', padx = 15)
 frm_table.pack(pady = 10, fill = 'both')
 
